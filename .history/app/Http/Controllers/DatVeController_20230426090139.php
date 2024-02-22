@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Ghe;
+use App\Models\Movie;
+use App\Models\Rap;
+use App\Models\SuatChieu;
+use App\Models\Theloai;
+use App\Models\Ve;
+use Illuminate\Http\Request;
+use DB;
+use Session;
+ 
+
+use Illuminate\Support\Facades\Redirect;
+ 
+class DatVeController extends Controller
+{
+ 
+     
+ 
+ 
+    public function ticket($idd)
+    {
+        $movie = Movie::find($idd);
+        $Suatchieu = SuatChieu::all();
+        $Rap = Rap::all();
+        $Ghe = Ghe::all();
+        $Ve = Ve::all();
+        if ($movie === null) {
+            return view('errors.404');
+        } else {
+            return view('ticket', [
+                'movie' => $movie,
+                'Suatchieu' =>$Suatchieu,
+                'Rap' =>$Rap,
+                'Ghe' =>$Ghe,
+                'Ve' =>$Ve,
+            ]);
+        }
+    }   
+    public function all_donDatVe(){
+        $all_donDatVe=DB::table('dondatve')->get();
+        $manager_Movie=view('/donDatVe')->with('/donDatVe',$all_donDatVe);
+        return view('donDatVe')->with('all_donDatVe',$all_donDatVe);
+    }
+    public function save_donDatVe(Request $request){
+ 
+ 
+        $data =array();
+        $data['IDPhim']=$request->IDPhim; 
+        $data['TenPhim']=$request->TenPhim;
+        $data['TenTheLoai']=$request->TenTheLoai;
+        $data['ThoiLuong']=$request->ThoiLuong;
+        $data['KhoiChieu']=$request->KhoiChieu;
+        $data['Mota']=$request->Mota;
+        $data['HinhAnh']= $file_name;
+        $data['Trailer']= $file_namee;
+        DB::table('dondatve')->insert($data);
+  
+        return Redirect::to('donDatVe');
+    }
+     
+ 
+}
